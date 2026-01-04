@@ -1,0 +1,3 @@
+env: prod
+s3_raw_bucket: s3://prod-bucket/raw
+s3_processed_bucket: s3://prod-bucket/processed
