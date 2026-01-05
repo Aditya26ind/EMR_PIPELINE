@@ -2,8 +2,9 @@ from common.spark_utils import get_spark_session
 from pyspark.sql.functions import col, sum as _sum
 
 def run():
-    input_path = "s3://emr-pipeline-input/sales/sales_data.csv"
-    output_path = "s3://emr-pipeline-output/sales/sales_data.csv"
+    # Use local dummy data for testing
+    input_path = "dataplatforms/data/dummy/sales/sales_data.csv"
+    output_path = "dataplatforms/data/output/sales/"
     
     spark = get_spark_session()
     

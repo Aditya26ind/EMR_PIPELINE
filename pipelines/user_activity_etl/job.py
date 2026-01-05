@@ -4,8 +4,9 @@ from common.spark_session import get_spark
 def run():
     spark = get_spark("User_Activity_ETL")
 
-    input_path = "s3://my-bucket/raw/user_activity/"
-    output_path = "s3://my-bucket/processed/user_activity/"
+    # Use local dummy data for testing
+    input_path = "dataplatforms/data/dummy/user_activity/"
+    output_path = "dataplatforms/data/output/user_activity/"
 
     df = spark.read.option("header", True).json(input_path)
 
