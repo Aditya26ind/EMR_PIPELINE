@@ -46,6 +46,10 @@ SPARK_STEPS = [
             "Jar": "command-runner.jar",
             "Args": [
                 "spark-submit",
+                "--deploy-mode",
+                "cluster",
+                "--py-files",
+                "s3://emr-aditya-salabh/dataplatforms/dataplatforms.zip",
                 "s3://emr-aditya-salabh/dataplatforms/main.py",
                 "user_activity",
             ],
