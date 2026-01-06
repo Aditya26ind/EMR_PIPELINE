@@ -12,6 +12,7 @@ from airflow.providers.amazon.aws.sensors.emr import EmrStepSensor
 JOB_FLOW_OVERRIDES = {
     "Name": "user-activity-emr-cluster",
     "ReleaseLabel": "emr-6.6.0",
+    "LogUri": "s3://emr-aditya-salabh/emr-logs/",
     "Applications": [{"Name": "Spark"}],
     "Instances": {
         "InstanceGroups": [
