@@ -1,5 +1,9 @@
 import sys
+import os
 
+
+# Add the current directory to Python path
+sys.path.insert(0, os.path.dirname(__file__))
 if len(sys.argv) < 2:
     raise Exception("Pipeline name required: sales | user_activity")
 

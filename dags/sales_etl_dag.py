@@ -28,7 +28,7 @@ JOB_FLOW_OVERRIDES = {
 
 # If you packaged your code into a zip uploaded to S3, set it here (optional).
 # If not using a zip, remove the --py-files entry in prepare_args below.
-DEFAULT_PY_FILES = "s3://emr-aditya-salabh/dataplatforms/dataplatforms.zip"
+DEFAULT_PY_FILES = "s3://emr-aditya-salabh/maindir/dataplatforms.zip"
 MAIN_PY = "s3://emr-aditya-salabh/dataplatforms/main.py"
 PIPELINE_ARG = "sales"
 
