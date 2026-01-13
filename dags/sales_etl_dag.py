@@ -20,7 +20,7 @@ JOB_FLOW_OVERRIDES = {
             {"Name": "Core",   "Market": "ON_DEMAND", "InstanceRole": "CORE",   "InstanceType": "m5.xlarge", "InstanceCount": 2},
         ],
         # Set True temporarily for debugging; set False to auto-terminate.
-        "KeepJobFlowAliveWhenNoSteps": False,
+        "KeepJobFlowAliveWhenNoSteps": True,
     },
     "JobFlowRole": "EMR_EC2_DefaultRole",
     "ServiceRole": "EMR_DefaultRole",
@@ -91,23 +91,23 @@ def sales_emr_pipeline():
     # Add steps (operator). The job_flow_id will be XCom from create_cluster (Airflow handles that).
     add_step = EmrAddStepsOperator(
         task_id="add_sales_step",
-        job_flow_id="{{ task_instance.xcom_pull('create_emr_cluster') }}",
+        job_flow_id="{{ ti.xcom_pull(task_ids='create_emr_cluster', key='return_value') }}",
         steps=steps,
     )
 
     # Wait for the step to finish
     watch_step = EmrStepSensor(
         task_id="watch_sales_step",
-        job_flow_id="{{ task_instance.xcom_pull('create_emr_cluster') }}",
-        step_id="{{ task_instance.xcom_pull('add_sales_step')[0] }}",
+        job_flow_id="{{ ti.xcom_pull(task_ids='create_emr_cluster', key='return_value') }}",
+        step_id="{{ ti.xcom_pull(task_ids='add_sales_step', key='return_value')[0] }}",
         poke_interval=30,
-        timeout=60 * 60 * 3,  # 3 hours max
+        timeout=60 * 60 * 4,  # 4 hours max (was 3)
     )
 
     # Terminate the cluster
     terminate_cluster = EmrTerminateJobFlowOperator(
         task_id="terminate_emr_cluster",
-        job_flow_id="{{ task_instance.xcom_pull('create_emr_cluster') }}",
+        job_flow_id="{{ ti.xcom_pull(task_ids='create_emr_cluster', key='return_value') }}",
     )
 
     # Wiring using TaskFlow-style "call ordering" mixed with operators

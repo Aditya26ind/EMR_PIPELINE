@@ -18,7 +18,7 @@ JOB_FLOW_OVERRIDES = {
             {"Name": "Master", "Market": "ON_DEMAND", "InstanceRole": "MASTER", "InstanceType": "m5.xlarge", "InstanceCount": 1},
             {"Name": "Core",   "Market": "ON_DEMAND", "InstanceRole": "CORE",   "InstanceType": "m5.xlarge", "InstanceCount": 2},
         ],
-        "KeepJobFlowAliveWhenNoSteps": False,
+        "KeepJobFlowAliveWhenNoSteps": True,
     },
     "JobFlowRole": "EMR_EC2_DefaultRole",
     "ServiceRole": "EMR_DefaultRole",
@@ -70,21 +70,21 @@ def user_activity_emr_pipeline():
 
     add_step = EmrAddStepsOperator(
         task_id="add_user_activity_step",
-        job_flow_id="{{ task_instance.xcom_pull('create_emr_cluster') }}",
+        job_flow_id="{{ ti.xcom_pull(task_ids='create_emr_cluster', key='return_value') }}",
         steps=steps,
     )
 
     watch_step = EmrStepSensor(
         task_id="watch_user_activity_step",
-        job_flow_id="{{ task_instance.xcom_pull('create_emr_cluster') }}",
-        step_id="{{ task_instance.xcom_pull('add_user_activity_step')[0] }}",
+        job_flow_id="{{ ti.xcom_pull(task_ids='create_emr_cluster', key='return_value') }}",
+        step_id="{{ ti.xcom_pull(task_ids='add_user_activity_step', key='return_value')[0] }}",
         poke_interval=30,
-        timeout=60 * 60 * 2,  # 2 hours
+        timeout=60 * 60 * 4,  # 4 hours (was 2)
     )
 
     terminate_cluster = EmrTerminateJobFlowOperator(
         task_id="terminate_emr_cluster",
-        job_flow_id="{{ task_instance.xcom_pull('create_emr_cluster') }}",
+        job_flow_id="{{ ti.xcom_pull(task_ids='create_emr_cluster', key='return_value') }}",
     )
 
     create_cluster >> add_step >> watch_step >> terminate_cluster
