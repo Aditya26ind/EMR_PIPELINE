@@ -1,0 +1,6 @@
+id,name,email,country,signup_ts
+1,Ada Lovelace,ada@example.com,UK,2024-10-01T09:15:00Z
+2,Grace Hopper,grace@example.com,US,2024-10-02T12:30:00Z
+3,Alan Turing,alan@example.com,UK,2024-10-03T18:45:00Z
+4,Katherine Johnson,katherine@example.com,US,2024-10-04T14:10:00Z
+5,Donald Knuth,donald@example.com,US,2024-10-05T07:55:00Z
